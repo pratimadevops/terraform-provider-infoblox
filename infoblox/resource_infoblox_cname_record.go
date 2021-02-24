@@ -48,6 +48,11 @@ func resourceCNAMERecord() *schema.Resource {
 				Required:    true,
 				Description: "Unique identifier of your tenant in cloud.",
 			},
+			"eas": &schema.Schema{
+				Type: 	     schema.TypeMap,
+				Optional:    true,
+				Description: "Extensible Attributes"
+			},
 		},
 	}
 }
@@ -65,8 +70,39 @@ func resourceCNAMERecordCreate(d *schema.ResourceData, m interface{}) error {
 	vmId := d.Get("vm_id").(string)
 	connector := m.(*ibclient.Connector)
 
+	//eas := d.Get("eas").(map[string]interface{})
+	
+	eas := make(map[string]interface{})
+	eas["activedirectory"] = d.Get("activedirectory")(string)
+	eas["ITSMSR"] = d.Get("ITSMSR")(string)
+	eas["country"] = d.Get("country")(string)
+	eas["MPLSVRF"] = d.Get("MPLSVRF")(string)]
+	eas["securityzone"] = d.Get("securityzone")(string)
+	eas["cloudaccountemailDL"] = d.Get("cloudaccountemailDL")(string)
+	eas["cloudaccountID"] = d.Get("cloudaccountID")(string)
+	eas["cloudserviceprovider"] = d.Get("cloudserviceprovider")(string)
+	eas["cloudzone"] = d.Get("cloudzone")(string)	
+	eas["region"] = d.Get("region")(string)	
+	eas["sitePOCemail"] = d.Get("sitePOCemail")(string)
+	eas["passcode"] = d.Get("passcode")(string)
+	
 	ea := make(ibclient.EA)
-
+	//for k,v := range eas {
+		//ea[k] = v			
+	//}	
+	ea["activedirectory"] = eas["activedirectory"] 
+	ea["ITSMSR"] = eas["ITSMSR"]
+	ea["country"] = eas["country"]
+	ea["MPLSVRF"] = eas["MPLSVRF"]
+	ea["securityzone"] = eas["securityzone"]
+	ea["cloudaccountemailDL"] = eas["cloudaccountemailDL"]
+	ea["cloudaccountID"] = eas["cloudaccountID"]
+	ea["cloudserviceprovider"] = eas["cloudserviceprovider"]
+	ea["cloudzone"] = eas["cloudzone"]
+	ea["region"] = eas["region"]
+	ea["sitePOCemail"] = eas["sitePOCemail"]
+	ea["passcode"] = eas["passcode"]
+	
 	ea["VM Name"] = canonical
 
 	if vmId != "" {
